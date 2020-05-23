@@ -3,6 +3,7 @@ package com.marx.instrutor.pagamento.service;
 import org.apache.camel.ProducerTemplate;
 
 import com.marx.instrutor.pagamento.camel.CamelContextWrapper;
+import com.marx.instrutor.representation.SolicitacaoPagamentoResponse;
 import com.marx.instrutor.representation.SolicitarPagamentoRepresentation;
 
 public class PagamentoServiceImpl {
@@ -13,9 +14,9 @@ public class PagamentoServiceImpl {
 	        this.template = wrapper.createProducerTemplate();
 	    }
 	    
-	public void parceiroSolicitaPagamento(SolicitarPagamentoRepresentation solicitarPagamentoRepresentation) {
-		template.requestBody("direct:parceiroSolicitaPagamento", solicitarPagamentoRepresentation,
-				SolicitarPagamentoRepresentation.class);
+	public SolicitacaoPagamentoResponse parceiroSolicitaPagamento(SolicitarPagamentoRepresentation solicitarPagamentoRepresentation) {
+		return template.requestBody("direct:parceiroSolicitaPagamento", solicitarPagamentoRepresentation,
+				SolicitacaoPagamentoResponse.class);
 		
 	}
 }

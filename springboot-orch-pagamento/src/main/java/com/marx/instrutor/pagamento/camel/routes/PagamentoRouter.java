@@ -3,6 +3,8 @@ package com.marx.instrutor.pagamento.camel.routes;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.JsonLibrary;
+import org.apache.http.HttpEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -11,7 +13,10 @@ import com.marx.instrutor.pagamento.camel.predicates.VerificarSaldoPredicate;
 import com.marx.instrutor.pagamento.camel.processor.AtualizarSaldoContaCorrenteProcessor;
 import com.marx.instrutor.pagamento.camel.processor.ConsultaContaCorrenteProcessor;
 import com.marx.instrutor.pagamento.camel.processor.EfetivarPagamentoProcessor;
+import com.marx.instrutor.pagamento.camel.processor.NotificarPagamentoProcessor;
 import com.marx.instrutor.pagamento.exception.SaldoIndisponivelException;
+import com.marx.instrutor.representation.ContaCorrenteRepresentation;
+import com.marx.instrutor.representation.SolicitarPagamentoRepresentation;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,17 +34,18 @@ public class PagamentoRouter extends RouteBuilder {
 		
 		from(fromPagamentoQueue())
                 .log(LoggingLevel.INFO, log, "${body}")
+                .unmarshal().json(JsonLibrary.Jackson, SolicitarPagamentoRepresentation.class)
                 .setProperty("initialPayload", simple("${body}"))
                 .process(new ConsultaContaCorrenteProcessor())
                 .to(urlContaCorrente)
-                //.unmarshal().json(JsonLibrary.Jackson, ContaCorrenteRepresentation.class)
+                .unmarshal().json(JsonLibrary.Jackson, ContaCorrenteRepresentation.class)
                 .choice()
                 	.when(new VerificarSaldoPredicate())
                 		.process(new EfetivarPagamentoProcessor())
-                	//	.marshal().json(JsonLibrary.Jackson, HttpEntity.class)
+                		.marshal().json(JsonLibrary.Jackson, HttpEntity.class)
                 		.to(urlPagamento)
                 		.process(new AtualizarSaldoContaCorrenteProcessor())
-                		//.marshal().json(JsonLibrary.Jackson, HttpEntity.class)
+                		.marshal().json(JsonLibrary.Jackson, HttpEntity.class)
                 		.to(urlContaCorrente)
                 	.otherwise()
                 		.throwException(new SaldoIndisponivelException("Seu saldo eh menor que o minimo para esta operacao", HttpStatus.BAD_GATEWAY))
@@ -47,7 +53,8 @@ public class PagamentoRouter extends RouteBuilder {
         
         
         from("direct:parceiroSolicitaPagamento")
-        .to(ExchangePattern.InOnly, toParceiroSolicitaPagamento());        
+        .to(ExchangePattern.InOnly, toParceiroSolicitaPagamento())
+        .process(new NotificarPagamentoProcessor());       
         		
     }
 

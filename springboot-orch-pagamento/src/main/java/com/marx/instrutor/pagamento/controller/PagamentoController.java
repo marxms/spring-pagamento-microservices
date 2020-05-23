@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.marx.instrutor.pagamento.service.PagamentoServiceImpl;
+import com.marx.instrutor.representation.SolicitacaoPagamentoResponse;
 import com.marx.instrutor.representation.SolicitarPagamentoRepresentation;
 
 import lombok.AllArgsConstructor;
@@ -20,9 +21,9 @@ public class PagamentoController {
 	private PagamentoServiceImpl pagamentoService;
 	
 	@PostMapping
-	public ResponseEntity<Void> efetuarPagamento(@RequestBody SolicitarPagamentoRepresentation solicitarPagamentoRepresentation) {
-		pagamentoService.parceiroSolicitaPagamento(solicitarPagamentoRepresentation);
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<SolicitacaoPagamentoResponse> efetuarPagamento(@RequestBody SolicitarPagamentoRepresentation solicitarPagamentoRepresentation) {
+		SolicitacaoPagamentoResponse response = pagamentoService.parceiroSolicitaPagamento(solicitarPagamentoRepresentation);
+		return new ResponseEntity<SolicitacaoPagamentoResponse>(response, HttpStatus.OK);
 	}
 
 }

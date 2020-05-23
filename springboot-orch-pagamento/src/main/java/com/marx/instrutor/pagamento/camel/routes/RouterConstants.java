@@ -14,10 +14,11 @@ public class RouterConstants {
 	
 	// QUEUE
     public static final String QUEUE_SOLICITAR_PAGAMENTO = "queue.solicitarPagamento";
-    
+    public static final String QUEUE_RESPOSTA_PAGAMENTO = "queue.respostaPagamento";
+
     
     //ROUNTING KEYS
-    public static final String ROUTINGKEY_SOLICITAR_PAGAMENTO = "routingkey.solicitarPagamento	";
+    public static final String ROUTINGKEY_SOLICITAR_PAGAMENTO = "routingkey.solicitarPagamento";
     
 
 }
