@@ -1,5 +1,6 @@
 package com.marx.instrutor.representation;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +16,12 @@ import lombok.Setter;
 @Setter
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
-public class ClienteRepresentation {
+public class ClienteRepresentation implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	

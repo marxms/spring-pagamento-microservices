@@ -24,7 +24,7 @@ public class EfetivarPagamentoProcessor implements Processor {
 		efetivarPagamentoRepresentation.setDtPagamento(new Date());
 		efetivarPagamentoRepresentation.setValorPagamento(solicitacaoPagamento.getValorPagamento());
 		exchange.getMessage().setBody(efetivarPagamentoRepresentation, PagamentoRepresentation.class);
-		exchange.getMessage().removeHeader(Exchange.HTTP_PATH);
+		exchange.getMessage().removeHeaders("*");
 		exchange.getMessage().setHeader(Exchange.HTTP_METHOD, HttpMethods.POST);
 	}
 

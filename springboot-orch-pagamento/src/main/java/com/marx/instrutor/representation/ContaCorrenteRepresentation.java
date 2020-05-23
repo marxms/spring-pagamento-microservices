@@ -1,5 +1,6 @@
 package com.marx.instrutor.representation;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -15,7 +16,12 @@ import lombok.Setter;
 @Setter
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope = ClienteRepresentation.class)
-public class ContaCorrenteRepresentation {
+public class ContaCorrenteRepresentation implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7397177701904739070L;
+
 	private Long id;
 	
 	private String numeroConta;

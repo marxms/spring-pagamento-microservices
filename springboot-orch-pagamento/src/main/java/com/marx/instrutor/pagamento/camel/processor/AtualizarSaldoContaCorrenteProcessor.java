@@ -20,6 +20,7 @@ public class AtualizarSaldoContaCorrenteProcessor implements Processor{
 		cliente.setId(titular.getId());
 		contaRepresentation.setTitular(cliente);
 		contaRepresentation.setPagamento(null);
+		exchange.getMessage().removeHeaders("*");
 		exchange.getMessage().setHeader(Exchange.HTTP_METHOD, HttpMethods.PUT);
 		exchange.getMessage().setBody(contaRepresentation);
 	}
